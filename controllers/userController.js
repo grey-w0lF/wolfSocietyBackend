@@ -85,10 +85,10 @@ const getAllUsers = asyncHandler(async (req, res) => {
 //@access Private
 
 const getUser = asyncHandler(async (req, res) => {
-  const cardId = req.params.cardid;
+  const cardId = req.body.cardId;
 
   const user = await User.findOne({ cardId });
-  if (user && user.email == req.body.email) {
+  if (user) {
     res.json(user);
   } else {
     res.status(404).json({ message: "User Not Found" });
@@ -100,7 +100,7 @@ const getUser = asyncHandler(async (req, res) => {
 //@acess private
 
 const removeUser = asyncHandler(async (req, res) => {
-  const cardId = req.params.cardid;
+  const cardId = req.body.cardId;
   const email = req.body.email;
 
   const user = await User.findOne({ cardId });
@@ -122,9 +122,43 @@ const authUser = asyncHandler(async (req, res) => {
     res.status(404).json({ message: "User Not Found" });
   }
 });
+const updateUser = asyncHandler(async (req, res) => {
+  const { name, password, dob, admin, gender, phoneNo, cardId } = req.body;
+
+  const userExists = await User.findOne({ cardId });
+  if (userExists) {
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    User.findOneAndUpdate(
+      { cardId: cardId },
+      {
+        $set: {
+          name: name,
+
+          gender: gender,
+          admin: admin,
+          phoneNo: phoneNo,
+          password: hashedPassword,
+          dob: dob,
+        },
+      }
+    ).exec(function (err, user) {
+      if (err) {
+        console.log(err);
+        res.status(500).send(err);
+      } else {
+        res.status(200).send(user);
+      }
+    });
+  } else {
+    res.status(400).json({ message: "User Not Found" });
+  }
+});
 
 module.exports = {
   registerUser,
+  updateUser,
   loginUser,
   getUser,
   getAllUsers,
