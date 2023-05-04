@@ -57,6 +57,8 @@ const loginUser = asyncHandler(async (req, res) => {
         _id: user.id,
         name: user.name,
         email: user.email,
+        phoneNo: user.phoneNo,
+        cardId: user.cardId,
         token: genToken.genToken(user.id),
       });
     } else {
