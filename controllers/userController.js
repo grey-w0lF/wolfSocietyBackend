@@ -112,6 +112,9 @@ const removeUser = asyncHandler(async (req, res) => {
   }
 });
 
+//@desc Micro controller Auth
+//@route GET /api/user/remove/cardid
+//@acess public
 const authUser = asyncHandler(async (req, res) => {
   const cardId = req.params.cardid;
 
@@ -122,6 +125,10 @@ const authUser = asyncHandler(async (req, res) => {
     res.status(404).json({ message: "User Not Found" });
   }
 });
+
+//@desc Update UserInfo
+//@route PUT /api/user/remove/cardid
+//@acess private
 const updateUser = asyncHandler(async (req, res) => {
   const { name, password, dob, admin, gender, phoneNo, cardId } = req.body;
 
