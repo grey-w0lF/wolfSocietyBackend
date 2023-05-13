@@ -144,7 +144,6 @@ const updateUser = asyncHandler(async (req, res) => {
       {
         $set: {
           name: name,
-
           gender: gender,
           admin: admin,
           phoneNo: phoneNo,
